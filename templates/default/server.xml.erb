@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8020" shutdown="SHUTDOWN">
+
+    <Service name="Catalina">
+
+        <Connector acceptCount="100" 
+			connectionTimeout="20000" 
+			disableUploadTimeout="true" 
+			enableLookups="false" 
+			maxHttpHeaderSize="8192" 
+			maxThreads="150" 
+			minSpareThreads="25" 
+			useBodyEncodingForURI="true" 
+			URIEncoding="UTF-8"
+			port="<%= node['crowd']['tomcat']['port'] %>"
+			<% if node['crowd']['apache2'] -%>
+			redirectPort="<%= node['crowd']['apache2']['ssl']['port'] %>"
+			secure="true"
+			scheme="https"
+			proxyName="<%= node['crowd']['apache2']['virtual_host_alias'] %>"
+			proxyPort="<%= node['crowd']['apache2']['ssl']['port'] %>"
+			<% else -%>
+			redirectPort="<%= node['crowd']['tomcat']['ssl_port'] %>"
+			<% end -%>
+		/>
+			
+		<Connector port="<%= node['crowd']['tomcat']['ssl_port'] %>" 
+			maxHttpHeaderSize="8192" 
+			maxThreads="150"
+			minSpareThreads="25" 
+			maxSpareThreads="75" 
+			enableLookups="false"
+			disableUploadTimeout="true" 
+			acceptCount="100" 
+			scheme="https" 
+			secure="true"
+			clientAuth="false" 
+			sslProtocol="TLS" 
+			SSLEnabled="true" 
+			<%- if @tomcat %>
+			<%= "keyAlias=\"#{@tomcat['keyAlias']}\"" if @tomcat['keyAlias'] %>
+			<%= "keystoreFile=\"#{@tomcat['keystoreFile']}\"" if @tomcat['keystoreFile'] %>
+			<%= "keystorePass=\"#{@tomcat['keystorePass']}\"" if @tomcat['keystorePass'] %>
+			<%- end %>
+		/>
+
+        <Engine defaultHost="localhost" name="Catalina">
+            <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true"/>
+        </Engine>
+
+        <!-- To connect to an external web server (typically Apache) -->
+        <!-- Define an AJP 1.3 Connector on port 8009 -->
+        <!--
+            <Connector port="8009" enableLookups="false" redirectPort="8443" protocol="AJP/1.3" />
+        -->
+    </Service>
+
+    <!-- Security listener. Documentation at /docs/config/listeners.html
+    <Listener className="org.apache.catalina.security.SecurityListener" />
+    -->
+    <!--APR library loader. Documentation at /docs/apr.html -->
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+    <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
+    <Listener className="org.apache.catalina.core.JasperListener" />
+    <!-- Prevent memory leaks due to use of particular java/javax APIs-->
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+</Server>
