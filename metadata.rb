@@ -4,7 +4,7 @@ maintainer_email 'sergio.leone@qvc.com'
 license          'Apache 2.0'
 description      'Installs/Configures Atlassian Crowd'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.0'
+version          '0.2.0'
 recipe 'crowd', 'Installs/Configures Atlassian Crowd'
 recipe 'crowd::apache2', 'Installs/Configures Apache 2 proxy for Crowd'
 recipe 'crowd::configuration', "Configures Crowd's settings"
