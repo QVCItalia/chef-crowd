@@ -4,12 +4,13 @@ default['crowd']['install_type'] = 'standalone'
 default['crowd']['service_type'] = 'init'
 default['crowd']['url_base']     = 'http://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd'
 default['crowd']['user']         = 'crowd'
-default['crowd']['version']      = '2.7.2'
+default['crowd']['version']      = '2.8.0'
 
 default['crowd']['url']      = "#{node['crowd']['url_base']}-#{node['crowd']['version']}.tar.gz"
 default['crowd']['checksum'] =
 case node['crowd']['version']
 when '2.7.2' then '49361f2c7cbd8035c2fc64dfff098eb5e51d754b5645425770da14fc577f1048'
+when '2.8.0' then 'c857eb16f65ed99ab8b289fe671e3cea89140d42f85639304caa91a3ba9ade05'
 end
 
 default['crowd']['apache2']['webapp_enable']      = true
